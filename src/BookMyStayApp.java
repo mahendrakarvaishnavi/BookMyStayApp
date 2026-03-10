@@ -1,88 +1,69 @@
-// Version 2.1
+// Version 3.1
 
-// Abstract Room Class
-abstract class Room {
+import java.util.HashMap;
+import java.util.Map;
 
-    private String roomType;
-    private int beds;
-    private double size;
-    private double price;
+// Inventory class responsible for managing room availability
+class RoomInventory {
 
-    // Constructor
-    public Room(String roomType, int beds, double size, double price) {
-        this.roomType = roomType;
-        this.beds = beds;
-        this.size = size;
-        this.price = price;
+    private HashMap<String, Integer> inventory;
+
+    // Constructor initializes the inventory
+    public RoomInventory() {
+        inventory = new HashMap<>();
+
+        // Register room types with available counts
+        inventory.put("Single Room", 10);
+        inventory.put("Double Room", 6);
+        inventory.put("Suite Room", 3);
     }
 
-    // Method to display room details
-    public void displayRoomDetails() {
-        System.out.println("Room Type: " + roomType);
-        System.out.println("Beds: " + beds);
-        System.out.println("Size: " + size + " sq.ft");
-        System.out.println("Price: ₹" + price + " per night");
+    // Retrieve availability of a specific room type
+    public int getAvailability(String roomType) {
+        return inventory.getOrDefault(roomType, 0);
     }
-}
 
-// Single Room Class
-class SingleRoom extends Room {
-
-    public SingleRoom() {
-        super("Single Room", 1, 200, 2000);
+    // Update availability (increase or decrease)
+    public void updateAvailability(String roomType, int count) {
+        if (inventory.containsKey(roomType)) {
+            inventory.put(roomType, inventory.get(roomType) + count);
+        }
     }
-}
 
-// Double Room Class
-class DoubleRoom extends Room {
+    // Display full inventory
+    public void displayInventory() {
+        System.out.println("Current Room Inventory:");
 
-    public DoubleRoom() {
-        super("Double Room", 2, 350, 3500);
-    }
-}
-
-// Suite Room Class
-class SuiteRoom extends Room {
-
-    public SuiteRoom() {
-        super("Suite Room", 3, 600, 7000);
+        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
+            System.out.println(entry.getKey() + " -> Available Rooms: " + entry.getValue());
+        }
     }
 }
 
-// Main Application Class
+// Main Application
 public class BookMyStayApp {
 
     public static void main(String[] args) {
 
         System.out.println("===== Book My Stay App =====");
-        System.out.println("Room Types & Availability\n");
+        System.out.println("Centralized Room Inventory\n");
 
-        // Create room objects (Polymorphism)
-        Room singleRoom = new SingleRoom();
-        Room doubleRoom = new DoubleRoom();
-        Room suiteRoom = new SuiteRoom();
+        // Initialize inventory system
+        RoomInventory inventory = new RoomInventory();
 
-        // Static availability variables
-        int singleRoomAvailability = 10;
-        int doubleRoomAvailability = 6;
-        int suiteRoomAvailability = 3;
+        // Display initial inventory
+        inventory.displayInventory();
 
-        // Display room details and availability
-        System.out.println("Single Room Details:");
-        singleRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + singleRoomAvailability);
-        System.out.println("--------------------------------");
+        System.out.println("\nChecking availability for Double Room:");
+        System.out.println("Available: " + inventory.getAvailability("Double Room"));
 
-        System.out.println("Double Room Details:");
-        doubleRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + doubleRoomAvailability);
-        System.out.println("--------------------------------");
+        // Update availability
+        System.out.println("\nBooking 1 Double Room...");
+        inventory.updateAvailability("Double Room", -1);
 
-        System.out.println("Suite Room Details:");
-        suiteRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + suiteRoomAvailability);
-        System.out.println("--------------------------------");
+        System.out.println("\nUpdated Inventory:");
+        inventory.displayInventory();
 
-        System.out.println("Application Terminated.");
+        System.out.println("\nApplication Terminated.");
     }
 }
