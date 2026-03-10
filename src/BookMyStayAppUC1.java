@@ -9,7 +9,7 @@
  * @author YourName
  * @version 1.0
  */
-public class uc1 {
+public class BookMyStayAppUC1 {
 
     /**
      * The main method is the entry point of the Java application.
